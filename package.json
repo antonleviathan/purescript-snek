@@ -1,0 +1,23 @@
+{
+  "name": "snek",
+  "version": "1.0.0",
+  "description": "Don't step pls.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "pulp": "^12.3.0",
+    "purescript": "^0.12.0"
+  },
+  "keywords": [
+    "snek",
+    "purescript",
+    "no-step"
+  ],
+  "author": "Anton Livaja <anton.livaja@pm.me>",
+  "license": "MIT"
+}
