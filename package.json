@@ -2,6 +2,8 @@
   "name": "snek",
   "version": "1.0.0",
   "description": "Don't step pls.",
+  "author": "Anton Livaja <anton.livaja@pm.me>",
+  "license": "MIT",
   "main": "index.js",
   "directories": {
     "test": "test"
@@ -23,7 +25,5 @@
     "snek",
     "purescript",
     "no-step"
-  ],
-  "author": "Anton Livaja <anton.livaja@pm.me>",
-  "license": "MIT"
+  ]
 }

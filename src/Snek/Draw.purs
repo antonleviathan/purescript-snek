@@ -53,7 +53,7 @@ randomRodent s ctx =
         stroke       ctx
 
 drawRodent :: State -> Context2D -> Effect Unit
-drawRodent c ctx = drawRect c.rodent
+drawRodent c ctx = drawRect c.currentRodent
   where
     drawRect coo = do
             let r = coordinateToRectangle coo

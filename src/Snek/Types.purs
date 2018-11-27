@@ -16,9 +16,10 @@ type Coordinate =
   }
 
 type State =
-  { current   :: Array Coordinate
-  , direction :: Int
-  , rodent    :: Coordinate
+  { current       :: Array Coordinate
+  , direction     :: Int
+  , currentRodent :: Coordinate
+  , rodents       :: Array Coordinate
   }
 
 data Color = Cyan | Blue | Orange | Yellow | Green | Purple | Red | White

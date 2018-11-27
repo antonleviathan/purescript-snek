@@ -4,9 +4,10 @@ import Config
 import Prelude (Unit, bind, discard, identity, map, pure, unit, void, ($), (*), (+), (-), (==), (&&), (<>))
 import Graphics.Canvas (clearRect, getCanvasElementById, getContext2D)
 import Data.Maybe (Maybe(..), fromMaybe, maybe)
-import Data.Array
+import Data.Array (head, tail, take, length)
 import Math ((%))
 import Partial.Unsafe
+import Data.List.Lazy.Types
 
 
 import Effect (Effect)
@@ -39,9 +40,10 @@ keyPress :: Ref State -> Event -> Effect Unit
 keyPress ref e = void $ modify move' ref
   where
     move' c =
-      { current:   c.current
-      , direction: keyCode e
-      , rodent:    c.rodent
+      { current:       c.current
+      , direction:     keyCode e
+      , currentRodent: c.currentRodent
+      , rodents:       c.rodents
       }
 
 data Direction = Left | Up | Right | Down
@@ -85,6 +87,8 @@ checkIfRodent rodent snakeHead =
     Nothing -> false
     Just snakeHead -> if snakeHead.x == rodent.x && snakeHead.y == rodent.y then true else false
 
+initialRodents :: Array Coordinate
+initialRodents = [{ x: 120.0, y: 15.0 },{ x: 120.0, y: 30.0 },{ x: 120.0, y: 45.0 },{ x: 120.0, y: 60.0 },{ x: 120.0, y: 75.0 },{ x: 120.0, y: 90.0 },{ x: 120.0, y: 105.0 },{ x: 120.0, y: 120.0 },{ x: 120.0, y: 135.0 },{ x: 120.0, y: 150.0 },{ x: 120.0, y: 165.0 },{ x: 120.0, y: 180.0 },{ x: 120.0, y: 195.0 },{ x: 120.0, y: 210.0 },{ x: 135.0, y: 15.0 },{ x: 135.0, y: 30.0 },{ x: 135.0, y: 45.0 },{ x: 135.0, y: 60.0 },{ x: 135.0, y: 75.0 },{ x: 135.0, y: 90.0 },{ x: 135.0, y: 105.0 },{ x: 135.0, y: 120.0 },{ x: 135.0, y: 135.0 },{ x: 135.0, y: 150.0 },{ x: 135.0, y: 165.0 },{ x: 135.0, y: 180.0 },{ x: 135.0, y: 195.0 },{ x: 135.0, y: 210.0 },{ x: 150.0, y: 15.0 },{ x: 150.0, y: 30.0 },{ x: 150.0, y: 45.0 },{ x: 150.0, y: 60.0 },{ x: 150.0, y: 75.0 },{ x: 150.0, y: 90.0 },{ x: 150.0, y: 105.0 },{ x: 150.0, y: 120.0 },{ x: 150.0, y: 135.0 },{ x: 150.0, y: 150.0 },{ x: 150.0, y: 165.0 },{ x: 150.0, y: 180.0 },{ x: 150.0, y: 195.0 },{ x: 150.0, y: 210.0 },{ x: 165.0, y: 15.0 },{ x: 165.0, y: 30.0 },{ x: 165.0, y: 45.0 },{ x: 165.0, y: 60.0 },{ x: 165.0, y: 75.0 },{ x: 165.0, y: 90.0 },{ x: 165.0, y: 105.0 },{ x: 165.0, y: 120.0 },{ x: 165.0, y: 135.0 },{ x: 165.0, y: 150.0 },{ x: 165.0, y: 165.0 },{ x: 165.0, y: 180.0 },{ x: 165.0, y: 195.0 },{ x: 165.0, y: 210.0 },{ x: 180.0, y: 15.0 },{ x: 180.0, y: 30.0 },{ x: 180.0, y: 45.0 },{ x: 180.0, y: 60.0 },{ x: 180.0, y: 75.0 },{ x: 180.0, y: 90.0 },{ x: 180.0, y: 105.0 },{ x: 180.0, y: 120.0 },{ x: 180.0, y: 135.0 },{ x: 180.0, y: 150.0 },{ x: 180.0, y: 165.0 },{ x: 180.0, y: 180.0 },{ x: 180.0, y: 195.0 },{ x: 180.0, y: 210.0 },{ x: 195.0, y: 15.0 },{ x: 195.0, y: 30.0 },{ x: 195.0, y: 45.0 },{ x: 195.0, y: 60.0 },{ x: 195.0, y: 75.0 },{ x: 195.0, y: 90.0 },{ x: 195.0, y: 105.0 },{ x: 195.0, y: 120.0 },{ x: 195.0, y: 135.0 },{ x: 195.0, y: 150.0 },{ x: 195.0, y: 165.0 },{ x: 195.0, y: 180.0 },{ x: 195.0, y: 195.0 },{ x: 195.0, y: 210.0 },{ x: 210.0, y: 15.0 },{ x: 210.0, y: 30.0 },{ x: 210.0, y: 45.0 },{ x: 210.0, y: 60.0 },{ x: 210.0, y: 75.0 },{ x: 210.0, y: 90.0 },{ x: 210.0, y: 105.0 },{ x: 210.0, y: 120.0 },{ x: 210.0, y: 135.0 },{ x: 210.0, y: 150.0 },{ x: 210.0, y: 165.0 },{ x: 210.0, y: 180.0 },{ x: 210.0, y: 195.0 },{ x: 210.0, y: 210.0 },{ x: 15.0, y: 15.0 },{ x: 15.0, y: 30.0 },{ x: 15.0, y: 45.0 },{ x: 15.0, y: 60.0 },{ x: 15.0, y: 75.0 },{ x: 15.0, y: 90.0 },{ x: 15.0, y: 105.0 },{ x: 15.0, y: 120.0 },{ x: 15.0, y: 135.0 },{ x: 15.0, y: 150.0 },{ x: 15.0, y: 165.0 },{ x: 15.0, y: 180.0 },{ x: 15.0, y: 195.0 },{ x: 15.0, y: 210.0 },{ x: 30.0, y: 15.0 },{ x: 30.0, y: 30.0 },{ x: 30.0, y: 45.0 },{ x: 30.0, y: 60.0 },{ x: 30.0, y: 75.0 },{ x: 30.0, y: 90.0 },{ x: 30.0, y: 105.0 },{ x: 30.0, y: 120.0 },{ x: 30.0, y: 135.0 },{ x: 30.0, y: 150.0 },{ x: 30.0, y: 165.0 },{ x: 30.0, y: 180.0 },{ x: 30.0, y: 195.0 },{ x: 30.0, y: 210.0 },{ x: 45.0, y: 15.0 },{ x: 45.0, y: 30.0 },{ x: 45.0, y: 45.0 },{ x: 45.0, y: 60.0 },{ x: 45.0, y: 75.0 },{ x: 45.0, y: 90.0 },{ x: 45.0, y: 105.0 },{ x: 45.0, y: 120.0 },{ x: 45.0, y: 135.0 },{ x: 45.0, y: 150.0 },{ x: 45.0, y: 165.0 },{ x: 45.0, y: 180.0 },{ x: 45.0, y: 195.0 },{ x: 45.0, y: 210.0 },{ x: 60.0, y: 15.0 },{ x: 60.0, y: 30.0 },{ x: 60.0, y: 45.0 },{ x: 60.0, y: 60.0 },{ x: 60.0, y: 75.0 },{ x: 60.0, y: 90.0 },{ x: 60.0, y: 105.0 },{ x: 60.0, y: 120.0 },{ x: 60.0, y: 135.0 },{ x: 60.0, y: 150.0 },{ x: 60.0, y: 165.0 },{ x: 60.0, y: 180.0 },{ x: 60.0, y: 195.0 },{ x: 60.0, y: 210.0 },{ x: 75.0, y: 15.0 },{ x: 75.0, y: 30.0 },{ x: 75.0, y: 45.0 },{ x: 75.0, y: 60.0 },{ x: 75.0, y: 75.0 },{ x: 75.0, y: 90.0 },{ x: 75.0, y: 105.0 },{ x: 75.0, y: 120.0 },{ x: 75.0, y: 135.0 },{ x: 75.0, y: 150.0 },{ x: 75.0, y: 165.0 },{ x: 75.0, y: 180.0 },{ x: 75.0, y: 195.0 },{ x: 75.0, y: 210.0 },{ x: 90.0, y: 15.0 },{ x: 90.0, y: 30.0 },{ x: 90.0, y: 45.0 },{ x: 90.0, y: 60.0 },{ x: 90.0, y: 75.0 },{ x: 90.0, y: 90.0 },{ x: 90.0, y: 105.0 },{ x: 90.0, y: 120.0 },{ x: 90.0, y: 135.0 },{ x: 90.0, y: 150.0 },{ x: 90.0, y: 165.0 },{ x: 90.0, y: 180.0 },{ x: 90.0, y: 195.0 },{ x: 90.0, y: 210.0 },{ x: 105.0, y: 15.0 },{ x: 105.0, y: 30.0 },{ x: 105.0, y: 45.0 },{ x: 105.0, y: 60.0 },{ x: 105.0, y: 75.0 },{ x: 105.0, y: 90.0 },{ x: 105.0, y: 105.0 },{ x: 105.0, y: 120.0 },{ x: 105.0, y: 135.0 },{ x: 105.0, y: 150.0 },{ x: 105.0, y: 165.0 },{ x: 105.0, y: 180.0 },{ x: 105.0, y: 195.0 },{ x: 105.0, y: 210.0 }]
 
 
 initialRodent :: Coordinate
@@ -94,16 +98,28 @@ initialState ::  State
 initialState =
   { current:   [ { x: blockHeight * 3.0, y: blockHeight * 3.0 } ]
   , direction: 40
-  , rodent:    initialRodent
+  , currentRodent: initialRodent
+  , rodents:    initialRodents
   }
 
+newRodent :: State -> Array Coordinate -> Coordinate
+newRodent s arr =
+  case head arr of
+    Nothing -> s.currentRodent
+    Just h -> h
 
+shuffleRodents :: State -> Array Coordinate
+shuffleRodents s =
+  case tail s.rodents of
+    Nothing -> s.rodents
+    Just t -> t <> pure s.currentRodent
 
 next :: State -> State
 next s =
-  { current:   moveBlocks (keyCodeToDir s.direction) s.rodent s.current
-  , direction: s.direction
-  , rodent:    s.rodent 
+  { current:       moveBlocks (keyCodeToDir s.direction) s.currentRodent s.current
+  , direction:     s.direction
+  , currentRodent: if checkIfRodent s.currentRodent (head s.current) then newRodent s s.rodents else s.currentRodent
+  , rodents:       if checkIfRodent s.currentRodent (head s.current) then shuffleRodents s else s.rodents
   }
 
 main :: Partial => Effect Unit
